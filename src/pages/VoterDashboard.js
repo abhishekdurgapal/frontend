@@ -8,6 +8,7 @@ export default function VoterDashboard() {
   const [error, setError] = useState('');
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     if (!token) {
@@ -17,7 +18,7 @@ export default function VoterDashboard() {
 
     console.log('Token found:', token);
 
-    fetch('http://localhost:4000/candidate', {
+    fetch(`${API}/candidate`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(async res => {
@@ -41,7 +42,7 @@ export default function VoterDashboard() {
 
   const vote = async (candidate) => {
     try {
-      const res = await fetch(`http://localhost:4000/candidate/vote/${candidate._id}`, {
+      const res = await fetch(`${API}/candidate/vote/${candidate._id}`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${token}` }
       });
