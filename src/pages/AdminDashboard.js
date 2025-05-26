@@ -6,10 +6,11 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [candidate, setCandidate] = useState({ name: '', party: '', age: '' });
   const token = localStorage.getItem('token');
+  const API= process.env.REACT_APP_API_URL;
 
   const fetchResults = async () => {
     try {
-      const res = await fetch('http://localhost:4000/candidate/vote/count', {
+      const res = await fetch(`${API}/candidate/vote/count`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
 
   const fetchVoters = async () => {
     try {
-      const res = await fetch('http://localhost:4000/user/users/voters', {
+      const res = await fetch(`${API}/user/users/voters`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -43,7 +44,7 @@ export default function AdminDashboard() {
   const handleCandidateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:4000/candidate', {
+      const res = await fetch(`${API}/candidate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ export default function AdminDashboard() {
 
   const resetVotes = async () => {
     try {
-      const res = await fetch('http://localhost:4000/user/admin/reset', {
+      const res = await fetch(`${API}/user/admin/reset`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
