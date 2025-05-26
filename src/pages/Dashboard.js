@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API = 'http://localhost:4000';
+const API = process.env.REACT_APP_API_URL;
 
 export default function Dashboard() {
   const [candidates, setCandidates] = useState([]);
