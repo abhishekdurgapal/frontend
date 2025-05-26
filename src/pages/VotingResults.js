@@ -4,11 +4,12 @@ export default function VotingResults() {
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
   const token = localStorage.getItem('token');
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await fetch('http://localhost:4000/candidate/vote/count', {
+        const res = await fetch(`${API}/candidate/vote/count`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
