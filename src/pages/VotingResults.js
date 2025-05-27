@@ -24,15 +24,31 @@ export default function VotingResults() {
     fetchResults();
   }, [token]);
 
+  const totalVotes = results.reduce((sum, r) => sum + r.votes, 0);
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Live Voting Results</h1>
+
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       {results.length > 0 ? (
-        results.map((r, i) => (
-          <p key={i}>{r.party}: {r.votes} votes</p>
-        ))
+        results.map((r, i) => {
+          const percent = totalVotes ? (r.votes / totalVotes) * 100 : 0;
+
+          return (
+            <div key={i} className="mb-4">
+              <p className="font-semibold">{r.party}: {r.votes} votes</p>
+              <div className="w-full bg-gray-200 rounded h-4">
+                <div
+                  className="bg-blue-600 h-4 rounded"
+                  style={{ width: `${percent}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-gray-600">{percent.toFixed(1)}%</p>
+            </div>
+          );
+        })
       ) : (
         <p>No results available yet.</p>
       )}
