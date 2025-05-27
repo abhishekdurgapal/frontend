@@ -143,13 +143,28 @@ export default function AdminDashboard() {
 
       {/* Voting Results */}
       <h2 className="text-xl font-semibold">Results:</h2>
-      {results.length > 0 ? (
-        results.map((r, i) => (
-          <p key={i}>{r.party}: {r.votes} votes</p>
-        ))
-      ) : (
-        <p>No results yet.</p>
-      )}
+         {results.length > 0 ? (
+             results.map((r, i) => {
+               const totalVotes = results.reduce((sum, r) => sum + r.votes, 0);
+               const percentage = totalVotes ? (r.votes / totalVotes) * 100 : 0;
+
+           return (
+              <div key={i} className="mb-4">
+              <p className="font-semibold">{r.party}: {r.votes} votes</p>
+              <div className="w-full bg-gray-200 rounded h-4">
+               <div
+                className="bg-blue-500 h-4 rounded"
+                style={{ width: `${percentage}%` }}
+               ></div>
+              </div>
+        <p className="text-sm text-gray-600">{percentage.toFixed(1)}%</p>
+      </div>
+    );
+  })
+) : (
+  <p>No results yet.</p>
+)}
+
 
       {/* Voter List */}
       <h2 className="text-xl font-semibold mt-6">Voters:</h2>
