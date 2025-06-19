@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import guestIcon from './guest-icon.png';
+
  // Update path as needed
 
 export default function VoterDashboard() {
@@ -120,7 +120,7 @@ export default function VoterDashboard() {
             {candidates.map((c, i) => (
               <div key={i} className="bg-white text-black rounded-2xl p-4 shadow-xl relative">
                 <img
-                  src={guestIcon}
+                  src="/guest-icon.png"
                   alt="Guest Icon"
                   className="w-20 h-20 absolute top-2 right-2"
                 />
