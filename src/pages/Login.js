@@ -1,70 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-
 const API = process.env.REACT_APP_API_URL;
 
 export default function Login() {
-  const [form, setForm] = useState({ aadharCardNumber: '', password: '' });
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleSuccess = async (credentialResponse) => {
     try {
-      const res = await fetch(`${API}/user/login`, {
+      const decoded = jwtDecode(credentialResponse.credential);
+
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/user/google-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify({
+          name: decoded.name,
+          email: decoded.email
+        })
       });
 
       const data = await res.json();
 
-      if (res.ok && data.token && data.user?.role) {
+      if (res.ok) {
+        // Store data from backend
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('role', data.user.role);
-      
+
+        // Navigate based on role
         if (data.user.role === 'admin') {
-          nav('/admin/dashboard');
+          navigate('/admin/dashboard');
         } else {
-          nav('/dashboard');
+          navigate('/dashboard');
         }
       } else {
-        alert(data.error || 'Invalid credentials or response');
+        alert(data.error || 'Login failed');
       }
-      
-      
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Something went wrong. Check the console for details.');
+    } catch (err) {
+      console.error('Login error:', err);
+      alert('Login failed');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
-        <input
-          required
-          className="w-full p-2 border rounded mb-2"
-          placeholder="Aadhar Number"
-          onChange={e => setForm({ ...form, aadharCardNumber: e.target.value })}
-        />
-        <input
-          className="w-full p-2 border rounded mb-4"
-          placeholder="Password"
-          type="password"
-          onChange={e => setForm({ ...form, password: e.target.value })}
-        />
-        <button
-          className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
-          onClick={handleLogin}
-        >
-          Log In
-        </button>
-        <button
-          className="mt-2 w-full border p-2 rounded hover:bg-gray-200"
-          onClick={() => nav('/')}
-        >
-          No account? Sign up
-        </button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-500 p-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl">
+        <h1 className="text-3xl font-bold mb-2 text-center text-gray-800">Fan Voting Portal</h1>
+        <p className="text-center mb-6 text-gray-500">Login with your Gmail to vote</p>
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleSuccess}
+            onError={() => alert('Google Login Failed')}
+            useOneTap
+          />
+        </div>
+        <p className="text-xs mt-6 text-gray-400 text-center">
+          We use Gmail only to allow one vote per person.
+        </p>
       </div>
     </div>
   );
