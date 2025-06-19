@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import guestIcon from './guest-icon.png';
+ // Update path as needed
 
 export default function VoterDashboard() {
   const [candidates, setCandidates] = useState([]);
@@ -81,24 +83,24 @@ export default function VoterDashboard() {
   if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">📺 Fan Voting Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-300 to-pink-400 text-gray-800 p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center text--600">📺 Fan Voting Dashboard</h1>
 
       {voted ? (
         <>
-          <p className="text-center text-green-300 font-semibold mb-4">✅ You have voted.</p>
-          <h2 className="text-2xl font-semibold mb-4 text-center">Live Results</h2>
+          <p className="text-center text--600 font-semibold mb-4">✅ You have voted.</p>
+          <h2 className="text-2xl font-bold text--600 mb-4 text-center">Live Results</h2>
           {results.length > 0 ? (
             <div className="max-w-xl mx-auto space-y-4">
               {results.map((r, i) => {
                 const total = results.reduce((sum, item) => sum + item.votes, 0);
                 const percent = total ? (r.votes / total) * 100 : 0;
                 return (
-                  <div key={i} className="bg-white text-black p-4 rounded-xl shadow">
-                    <p className="font-semibold text-lg">{r.party} — {r.votes} votes</p>
-                    <div className="w-full bg-gray-200 rounded h-4 mt-2">
+                  <div key={i} className="bg-red-100 text-black p-4 rounded-xl shadow">
+                    <p className="font-bold text-green-600 text-lg">{r.party} — {r.votes} votes</p>
+                    <div className="w-full bg-blue-200 rounded h-4 mt-2">
                       <div
-                        className="bg-blue-500 h-4 rounded"
+                        className="bg-lime-500 h-4 rounded"
                         style={{ width: `${percent}%` }}
                       ></div>
                     </div>
@@ -113,14 +115,19 @@ export default function VoterDashboard() {
         </>
       ) : (
         <>
-          <h2 className="text-2xl font-semibold mb-4 text-center">Vote for Your Favorite</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <h2 className="text-2xl font-semibold text-purple-500 mb-4 text-center">Vote for Your Favorite</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {candidates.map((c, i) => (
-              <div key={i} className="bg-white text-black rounded-2xl p-4 shadow-xl">
+              <div key={i} className="bg-white text-black rounded-2xl p-4 shadow-xl relative">
+                <img
+                  src={guestIcon}
+                  alt="Guest Icon"
+                  className="w-20 h-20 absolute top-2 right-2"
+                />
                 {c.image && (
                   <img src={c.image} alt={c.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                 )}
-                <p className="text-xl font-bold">{c.name}</p>
+                <p className="text-xl font-bold text-purple-700">{c.name}</p>
                 <p className="mb-4 text-gray-600">{c.party}</p>
                 <button
                   onClick={() => vote(c)}
